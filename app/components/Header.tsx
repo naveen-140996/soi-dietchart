@@ -51,14 +51,17 @@ export default function Header() {
               </Link>
             ))}
           </nav>
-
-          {/* MOBILE MENU ICON */}
+          <div className="flex item-center">
+            <Link href={"https://soiorganic.com/"} target="_blank" className="md:hidden text-[14px]"><button className="border bg-green-600 bg p-[5px] font-medium text-white rounded-[4px]">Shop now</button></Link>
+            {/* MOBILE MENU ICON */}
           <button
             onClick={() => setIsOpen(true)}
-            className="md:hidden text-2xl"
+            className="md:hidden text-2xl ml-3"
           >
             ☰
           </button>
+          </div>
+         
         </div>
       </header>
 
