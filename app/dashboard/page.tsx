@@ -223,9 +223,9 @@ export default function Dashboard() {
         {item.name}
       </h3>
 
-      <p className="text-green-600 font-bold mt-1">
+      {/* <p className="text-green-600 font-bold mt-1">
         ₹{item.price}
-      </p>
+      </p> */}
 
       {/* BUTTON ALWAYS BOTTOM */}
       <div className="mt-auto">
