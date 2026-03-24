@@ -6,7 +6,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 
 const Signup = () => {
-    const router = useRouter();
+  const router = useRouter();
 
   const [form, setForm] = useState({
     name: "",
@@ -24,6 +24,8 @@ const Signup = () => {
     password: "",
     confirmPassword: "",
   });
+
+  const [loading, setLoading] = useState(false);
 
   // ✅ Validation
   const validate = () => {
@@ -68,23 +70,75 @@ const Signup = () => {
     return valid;
   };
 
-  const handleSignup = () => {
-    if (validate()) {
-      console.log("User Registered:", form);
+  // ✅ API CALL
+  const handleSignup = async () => {
+    if (!validate()) return;
+
+    setLoading(true);
+
+    // Clear old errors
+    setErrors({
+      name: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    });
+
+    try {
+      const res = await fetch(
+        "https://diet-chart-9wl9.onrender.com/api/auth/signup",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(form),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // Handle backend errors
+        if (data.message === "User already exists") {
+          setErrors((prev) => ({
+            ...prev,
+            email: "Email already registered",
+          }));
+        } else if (data.message === "Passwords do not match ❌") {
+          setErrors((prev) => ({
+            ...prev,
+            confirmPassword: data.message,
+          }));
+        } else {
+          alert(data.message);
+        }
+        setLoading(false);
+        return;
+      }
+
+      // ✅ Success
+      localStorage.setItem("token", data.token);
+
+      alert("Signup successful ✅");
+
       router.push("/dashboard");
+    } catch (error) {
+      console.error(error);
+      alert("Server error ❌");
+    } finally {
+      setLoading(false);
     }
   };
-  
+
   return (
-   <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-green-100 px-4">
-      
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-100 to-green-100 px-4">
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6 md:p-8"
+        className="w-full max-w-md bg-white rounded-2xl shadow-xl p-6"
       >
-        <h1 className="text-2xl md:text-3xl font-bold text-center mb-6">
+        <h1 className="text-2xl font-bold text-center mb-6">
           Create Account 🚀
         </h1>
 
@@ -94,7 +148,9 @@ const Signup = () => {
           placeholder="Full Name"
           className="w-full p-3 mb-1 border rounded-lg"
           value={form.name}
-          onChange={(e) => setForm({ ...form, name: e.target.value })}
+          onChange={(e) =>
+            setForm({ ...form, name: e.target.value })
+          }
         />
         {errors.name && (
           <p className="text-red-500 text-sm mb-2">{errors.name}</p>
@@ -106,7 +162,9 @@ const Signup = () => {
           placeholder="Email"
           className="w-full p-3 mb-1 border rounded-lg"
           value={form.email}
-          onChange={(e) => setForm({ ...form, email: e.target.value })}
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
         />
         {errors.email && (
           <p className="text-red-500 text-sm mb-2">{errors.email}</p>
@@ -124,7 +182,7 @@ const Signup = () => {
             }
           />
           <div
-            className="absolute right-3 top-3 cursor-pointer text-gray-500"
+            className="absolute right-3 top-3 cursor-pointer"
             onClick={() => setShowPassword(!showPassword)}
           >
             {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -142,11 +200,14 @@ const Signup = () => {
             className="w-full p-3 border rounded-lg pr-10"
             value={form.confirmPassword}
             onChange={(e) =>
-              setForm({ ...form, confirmPassword: e.target.value })
+              setForm({
+                ...form,
+                confirmPassword: e.target.value,
+              })
             }
           />
           <div
-            className="absolute right-3 top-3 cursor-pointer text-gray-500"
+            className="absolute right-3 top-3 cursor-pointer"
             onClick={() => setShowConfirm(!showConfirm)}
           >
             {showConfirm ? <EyeOff size={20} /> : <Eye size={20} />}
@@ -163,24 +224,25 @@ const Signup = () => {
           whileTap={{ scale: 0.95 }}
           whileHover={{ scale: 1.03 }}
           onClick={handleSignup}
+          disabled={loading}
           className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold"
         >
-          Sign Up
+          {loading ? "Creating..." : "Sign Up"}
         </motion.button>
 
-        {/* Redirect */}
+        {/* Login Redirect */}
         <p className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{" "}
           <span
             onClick={() => router.push("/")}
-            className="text-red-600 underline font-medium cursor-pointer"
+            className="text-red-600 underline cursor-pointer"
           >
             Login
           </span>
         </p>
       </motion.div>
     </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;
