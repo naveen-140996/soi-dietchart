@@ -81,7 +81,7 @@ const handleLogin = async () => {
 
     // ✅ Success
     alert("Login successful ✅");
-
+    localStorage.setItem("token", data.token);
     router.push("/dashboard");
   } catch (error) {
     console.error(error);

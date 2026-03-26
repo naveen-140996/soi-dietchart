@@ -45,7 +45,7 @@ const ProfilePage = () => {
       method: "POST",
       credentials: "include",
     });
-
+    localStorage.removeItem("token");
     router.push("/signin");
   };
 
