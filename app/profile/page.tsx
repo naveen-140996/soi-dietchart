@@ -3,49 +3,26 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-
-type UserType = {
-  id: string;
-  name?: string;
-  email?: string;
-};
+import { useAuth } from "../context/AuthContext";
 
 const ProfilePage = () => {
   const router = useRouter();
+  const { user, isLoggedIn, logout } = useAuth();
 
-  const [user, setUser] = useState<UserType | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState(true);
 
-  // ✅ Fetch user profile
+  // 🔐 Protect route
   useEffect(() => {
-    fetch("https://diet-chart-9wl9.onrender.com/api/user/profile", {
-      credentials: "include",
-    })
-      .then((res) => {
-        if (!res.ok) {
-          router.push("/signin");
-          return;
-        }
-        return res.json();
-      })
-      .then((data) => {
-        if (data?.user) {
-          setUser(data.user);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        router.push("/signin");
-      });
-  }, [router]);
+    if (!isLoggedIn) {
+      router.push("/signin");
+    } else {
+      setLoading(false); // ✅ FIX
+    }
+  }, [isLoggedIn, router]);
 
-  // ✅ Logout
-  const handleLogout = async () => {
-    await fetch("https://diet-chart-9wl9.onrender.com/api/auth/logout", {
-      method: "POST",
-      credentials: "include",
-    });
-    localStorage.removeItem("token");
+  // 🔥 Logout
+  const handleLogout = () => {
+    logout();
     router.push("/signin");
   };
 
@@ -82,19 +59,18 @@ const ProfilePage = () => {
           className="bg-white rounded-2xl shadow-xl p-6 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-6"
         >
           
-          {/* Left Side */}
+          {/* Left */}
           <div className="flex flex-col items-center text-center">
             <div className="w-24 h-24 rounded-full bg-green-500 flex items-center justify-center text-white text-3xl font-bold mb-4">
-              {user?.name?.charAt(0) || "U"}
+              {user?.name?.charAt(0) || "U"} {/* ✅ FIX */}
             </div>
 
             <h2 className="text-xl font-semibold">{user?.name}</h2>
             <p className="text-gray-500">{user?.email}</p>
           </div>
 
-          {/* Right Side */}
+          {/* Right */}
           <div className="space-y-4">
-            
             <div>
               <label className="text-sm text-gray-500">Full Name</label>
               <div className="p-3 border rounded-lg bg-gray-50">
@@ -108,18 +84,10 @@ const ProfilePage = () => {
                 {user?.email}
               </div>
             </div>
-
-            {/* <div>
-              <label className="text-sm text-gray-500">User ID</label>
-              <div className="p-3 border rounded-lg bg-gray-50 break-all">
-                {user?.id}
-              </div>
-            </div> */}
-
           </div>
         </motion.div>
 
-        {/* Extra Section */}
+        {/* Extra */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}

@@ -5,9 +5,12 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "../context/AuthContext";
 
 const Login = () => {
   const router = useRouter();
+  const { login } = useAuth();
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -68,7 +71,7 @@ const handleLogin = async () => {
     );
 
     const data = await res.json();
-
+    login(data)
     if (!res.ok) {
       // show backend error under email field
       setErrors({
@@ -78,10 +81,8 @@ const handleLogin = async () => {
       setLoading(false);
       return;
     }
-
     // ✅ Success
     alert("Login successful ✅");
-    localStorage.setItem("token", data.token);
     router.push("/dashboard");
   } catch (error) {
     console.error(error);
