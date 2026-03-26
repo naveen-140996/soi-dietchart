@@ -46,7 +46,7 @@ const ProfilePage = () => {
       credentials: "include",
     });
 
-    router.push("/login");
+    router.push("/signin");
   };
 
   if (loading) {
