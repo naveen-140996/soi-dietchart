@@ -23,7 +23,7 @@ const ProfilePage = () => {
     })
       .then((res) => {
         if (!res.ok) {
-          router.push("/login");
+          router.push("/signin");
           return;
         }
         return res.json();
@@ -35,7 +35,7 @@ const ProfilePage = () => {
         setLoading(false);
       })
       .catch(() => {
-        router.push("/login");
+        router.push("/signin");
       });
   }, [router]);
 
