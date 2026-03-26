@@ -62,7 +62,7 @@ const ProfilePage = () => {
           {/* Left */}
           <div className="flex flex-col items-center text-center">
             <div className="w-24 h-24 rounded-full bg-green-500 flex items-center justify-center text-white text-3xl font-bold mb-4">
-              {user?.name?.charAt(0) || "U"} {/* ✅ FIX */}
+              {user?.name}
             </div>
 
             <h2 className="text-xl font-semibold">{user?.name}</h2>
