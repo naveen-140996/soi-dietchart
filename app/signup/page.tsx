@@ -58,13 +58,13 @@ const Signup = () => {
       valid = false;
     }
 
-    if (!form.confirmPassword) {
-      newErrors.confirmPassword = "Confirm your password";
-      valid = false;
-    } else if (form.password !== form.confirmPassword) {
-      newErrors.confirmPassword = "Passwords do not match";
-      valid = false;
-    }
+    // if (!form.confirmPassword) {
+    //   newErrors.confirmPassword = "Confirm your password";
+    //   valid = false;
+    // } else if (form.password !== form.confirmPassword) {
+    //   newErrors.confirmPassword = "Passwords not match";
+    //   valid = false;
+    // }
 
     setErrors(newErrors);
     return valid;

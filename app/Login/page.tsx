@@ -43,17 +43,53 @@ const Login = () => {
     return valid;
   };
 
-  const handleLogin = async () => {
-    if (!validate()) return;
+const handleLogin = async () => {
+  if (!validate()) return;
 
-    setLoading(true);
+  setLoading(true);
 
-    // simulate API call
-    setTimeout(() => {
+  // clear old errors
+  setErrors({ email: "", password: "" });
+
+  try {
+    const res = await fetch(
+      "https://diet-chart-9wl9.onrender.com/api/auth/login",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include", // 🔥 IMPORTANT for cookies
+        body: JSON.stringify({
+          email,
+          password,
+        }),
+      }
+    );
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      // show backend error under email field
+      setErrors({
+        email: data.message || "Invalid email or password",
+        password: "",
+      });
       setLoading(false);
-      router.push("/dashboard");
-    }, 1000);
-  };
+      return;
+    }
+
+    // ✅ Success
+    alert("Login successful ✅");
+
+    router.push("/dashboard");
+  } catch (error) {
+    console.error(error);
+    alert("Server error ❌");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-green-100 to-blue-100 px-4">
