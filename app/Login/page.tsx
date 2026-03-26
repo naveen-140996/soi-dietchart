@@ -101,8 +101,12 @@ const handleLogin = async () => {
         <h1 className="text-2xl font-bold text-center mb-6">
           Welcome Back Soi Organic 👋
         </h1>
+      <form onSubmit={(e) => {
+    e.preventDefault();
+    handleLogin();
+  }}>
 
-        {/* Email */}
+          {/* Email */}
         <input
           type="email"
           placeholder="Enter your email"
@@ -113,7 +117,6 @@ const handleLogin = async () => {
           }`}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleLogin()}
         />
         {errors.email && (
           <p className="text-red-500 text-sm mb-2">{errors.email}</p>
@@ -131,7 +134,6 @@ const handleLogin = async () => {
             }`}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            onKeyDown={(e) => e.key === "Enter" && handleLogin()}
           />
 
           <div
@@ -147,13 +149,15 @@ const handleLogin = async () => {
         )}
 
         {/* Button */}
-        <button
-          onClick={handleLogin}
+        <button type="submit"
           disabled={!email || !password || loading}
           className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition disabled:bg-gray-400"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
+
+      </form>
+      
 
         {/* Signup */}
         <p className="text-[14px] text-center mt-3 text-gray-600">
