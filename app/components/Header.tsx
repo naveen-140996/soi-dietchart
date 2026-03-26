@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import logo from "../../public/soiOrganicLogo.webp";
+import path from "path";
 
 export default function Header() {
   const [isOpen, setIsOpen] = useState(false);
@@ -15,6 +16,7 @@ export default function Header() {
     { name: "Diet Chart", path: "/diet-chart" },
     { name: "Reels", path: "/reels" },
     { name: "YouTube", path: "/youtube" },
+    {name:"profile",path:"/profile"}
   ];
 
   return (
