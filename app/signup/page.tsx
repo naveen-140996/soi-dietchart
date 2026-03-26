@@ -234,7 +234,7 @@ const Signup = () => {
         <p className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{" "}
           <span
-            onClick={() => router.push("/")}
+            onClick={() => router.push("/login")}
             className="text-red-600 underline cursor-pointer"
           >
             Login

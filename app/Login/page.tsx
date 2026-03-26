@@ -150,8 +150,7 @@ const handleLogin = async () => {
 
         {/* Button */}
         <button type="submit"
-          disabled={!email || !password || loading}
-          className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition disabled:bg-gray-400"
+          className="w-full bg-green-500 hover:bg-green-600 text-white py-3 rounded-lg font-semibold transition"
         >
           {loading ? "Logging in..." : "Login"}
         </button>
