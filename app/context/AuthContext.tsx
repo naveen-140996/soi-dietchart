@@ -1,10 +1,11 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import Cookies from "js-cookie";
 
 interface UserType {
   id: string;
-  name:string;
+  name: string;
   email: string;
 }
 
@@ -22,10 +23,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<UserType | null>(null);
   const [token, setToken] = useState<string | null>(null);
 
-  // 🔥 Load on refresh
+  // 🔥 Load from cookies on refresh
   useEffect(() => {
-    const savedToken = localStorage.getItem("token");
-    const savedUser = localStorage.getItem("user");
+    const savedToken = Cookies.get("token");
+    const savedUser = Cookies.get("user");
 
     if (savedToken) setToken(savedToken);
     if (savedUser) setUser(JSON.parse(savedUser));
@@ -36,8 +37,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setToken(data.token);
     setUser(data.user);
 
-    localStorage.setItem("token", data.token);
-    localStorage.setItem("user", JSON.stringify(data.user));
+    // ✅ Store in cookies (7 days expiry)
+    Cookies.set("token", data.token, { expires: 7 });
+    Cookies.set("user", JSON.stringify(data.user), { expires: 7 });
   };
 
   // 🔥 LOGOUT
@@ -45,8 +47,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     setToken(null);
     setUser(null);
 
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+    // ✅ Remove cookies
+    Cookies.remove("token");
+    Cookies.remove("user");
 
     window.location.href = "/login";
   };
