@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useState } from "react";
 import API from "../utils/api";
 import Header from "../components/Header";
@@ -12,80 +11,63 @@ export default function ReelsPage() {
   }, []);
 
   const fetchReels = async () => {
-    const res = await API.get("/admin/content");
+    try {
+      const res = await API.get("/admin/content");
 
-    const data = res.data.filter(
-      (item: any) => item.type === "reel"
-    );
+      // 🔥 FILTER REELS ONLY
+      const reelData = res.data.filter(
+        (item: any) => item.type?.toLowerCase() === "reel"
+      );
 
-    setReels(data);
+      setReels(reelData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 🔥 ensure embed format
+  const getEmbedUrl = (url: string) => {
+    if (url.includes("/reel/") && !url.includes("/embed")) {
+      return `${url}/embed`;
+    }
+    return url;
   };
 
   return (
-    <>
+    <div className="overflow-hidden">
       <Header />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
 
-        <h1 className="text-2xl font-bold text-green-600 mb-6">
+        {/* Title */}
+        <h1 className="text-2xl md:text-3xl font-bold text-green-600 mb-6">
           Instagram Reels
         </h1>
 
-        {/* MOBILE SCROLL */}
-        <div className="flex md:hidden gap-4 overflow-x-auto">
-          {reels.map((reel, i) => (
-            <a
-              key={i}
-              href={reel.url}
-              target="_blank"
-              className="min-w-[260px] rounded-xl overflow-hidden shadow bg-white"
+        {/* Horizontal Scroll */}
+        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
+
+          {reels.map((reel, index) => (
+            <div
+              key={index}
+              className="min-w-[250px] md:min-w-[300px] bg-white rounded-xl shadow p-3 flex-shrink-0"
             >
-              <div className="relative">
+              <h2 className="font-semibold mb-2">
+                Reel {index + 1}
+              </h2>
 
-                <img
-                  src={reel.thumbnail}
-                  className="w-full h-[360px] object-cover"
+              <div className="aspect-[9/16] w-full overflow-hidden rounded-lg">
+                <iframe
+                  src={getEmbedUrl(reel.url)}
+                  className="w-full h-full"
+                  allow="autoplay; encrypted-media"
                 />
-
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-black/70 text-white px-4 py-2 rounded-full">
-                    ▶
-                  </div>
-                </div>
-
               </div>
-            </a>
+            </div>
           ))}
+
         </div>
-
-        {/* DESKTOP GRID */}
-        <div className="hidden md:grid md:grid-cols-3 gap-6">
-          {reels.map((reel, i) => (
-            <a
-              key={i}
-              href={reel.url}
-              target="_blank"
-              className="rounded-xl overflow-hidden shadow bg-white"
-            >
-              <div className="relative">
-
-                <img
-                  src={reel.thumbnail}
-                  className="w-full h-[400px] object-cover"
-                />
-
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <div className="bg-black/70 text-white px-4 py-2 rounded-full">
-                    ▶
-                  </div>
-                </div>
-
-              </div>
-            </a>
-          ))}
-        </div>
-
       </div>
-    </>
+    </div>
   );
 }

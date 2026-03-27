@@ -14,7 +14,7 @@ export default function Header() {
   const menu = [
     { name: "Home", path: "/dashboard" },
     { name: "Diet Chart", path: "/diet-chart" },
-    { name: "Reels", path: "/reels" },
+    // { name: "Reels", path: "/reels" },
     { name: "YouTube", path: "/youtube" },
     {name:"profile",path:"/profile"}
   ];
