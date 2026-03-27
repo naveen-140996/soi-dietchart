@@ -56,12 +56,16 @@ export default function ReelsPage() {
                 Reel {i + 1}
               </h2>
 
-              <div className="aspect-[9/16] w-full rounded-lg overflow-hidden">
-                <iframe
-                  src={getEmbedUrl(reel.url)}
-                  className="w-full h-full"
-                  allow="autoplay; clipboard-write; encrypted-media"
-                />
+             <div className="aspect-[9/16] flex items-center justify-center bg-gray-100 rounded-lg">
+                <a
+                  href={reel.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="bg-black text-white px-4 py-2 rounded-lg"
+                >
+                  ▶ Watch Reel
+                </a>
+
               </div>
             </div>
           ))}
