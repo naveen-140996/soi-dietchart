@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     Cookies.remove("token");
     Cookies.remove("user");
 
-    window.location.href = "/login";
+    window.location.href = "/signin";
   };
 
   return (

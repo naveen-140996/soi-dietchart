@@ -122,7 +122,7 @@ const Signup = () => {
 
       alert("Signup successful ✅");
 
-      router.push("/dashboard");
+      router.push("/signin");
     } catch (error) {
       console.error(error);
       alert("Server error ❌");

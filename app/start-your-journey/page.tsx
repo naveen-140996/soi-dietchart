@@ -317,30 +317,68 @@ export default function StartYourJourney() {
       </div>
 
       {/* MODAL */}
-      {isModalOpen && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
-          <motion.div
-            initial={{ scale: 0.8 }}
-            animate={{ scale: 1 }}
-            className="bg-white p-5 rounded w-[90%] max-w-md"
-          >
-            {["morning","lunch","dinner","weight"].map((field) => (
-              <input
-                key={field}
-                name={field}
-                value={(form as any)[field]}
-                onChange={handleChange}
-                className="w-full border p-2 mb-2"
-              />
-            ))}
+     {isModalOpen && (
+  <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-50">
+    <motion.div
+      initial={{ scale: 0.8 }}
+      animate={{ scale: 1 }}
+      className="bg-white p-5 rounded-xl w-[90%] max-w-md shadow-lg"
+    >
+      <h2 className="text-lg font-bold mb-3">Edit Day</h2>
 
-            <button onClick={handleUpdate} className="bg-green-600 text-white w-full py-2 rounded">
-              {updateLoading ? "Updating..." : "Update"}
-            </button>
-          </motion.div>
+      {/* INPUTS */}
+      {["morning", "lunch", "dinner", "weight"].map((field) => (
+        <div key={field} className="mb-2">
+          <input
+            name={field}
+            value={(form as any)[field]}
+            onChange={handleChange}
+            placeholder={field}
+            className={`w-full border p-2 rounded ${
+              errors[field] ? "border-red-500" : ""
+            }`}
+          />
+          {errors[field] && (
+            <p className="text-red-500 text-xs">{errors[field]}</p>
+          )}
         </div>
-      )}
+      ))}
 
+      {/* ACTION BUTTONS */}
+      <div className="flex justify-end gap-2 mt-4">
+        
+        {/* 🔴 CANCEL BUTTON */}
+        <button
+          onClick={() => {
+            setIsModalOpen(false);
+            setEditIndex(null);
+
+            // optional reset
+            setErrors({});
+            setForm({
+              morning: "",
+              lunch: "",
+              dinner: "",
+              weight: "",
+              targetWeight: "",
+            });
+          }}
+          className="px-4 py-2 border rounded-lg hover:bg-gray-100"
+        >
+          Cancel
+        </button>
+
+        {/* UPDATE BUTTON */}
+        <button
+          onClick={handleUpdate}
+          className="px-4 py-2 bg-green-600 text-white rounded-lg"
+        >
+          {updateLoading ? "Updating..." : "Update"}
+        </button>
+      </div>
+    </motion.div>
+  </div>
+)}
       <Footer />
     </div>
   );
