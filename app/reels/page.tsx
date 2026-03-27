@@ -1,57 +1,94 @@
 "use client";
+
+import { useEffect, useState } from "react";
+import API from "../utils/api";
 import Header from "../components/Header";
 
-const reels = [
-  {
-    id: 1,
-    title: "Feel Fresh Tea",
-    url: "https://www.instagram.com/reel/DJwYpzWTftO/embed",
-  },
-  {
-    id: 2,
-    title: "Asvara Preparation",
-    url: "https://www.instagram.com/reel/DMKUc1sR0nh/embed",
-  },
-  {
-    id: 3,
-    title: "More Video",
-    url: "https://www.instagram.com/reel/DJwYpzWTftO/embed",
-  },
-];
-
 export default function ReelsPage() {
+  const [reels, setReels] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchReels();
+  }, []);
+
+  const fetchReels = async () => {
+    try {
+      const res = await API.get("/admin/content");
+
+      // 🔥 FILTER ONLY REELS
+      const reelData = res.data.filter(
+        (item: any) => item.type === "reel"
+      );
+
+      setReels(reelData);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  // 🔥 FIX INSTAGRAM EMBED URL
+  const getEmbedUrl = (url: string) => {
+    if (url.includes("/reel/") && !url.includes("/embed")) {
+      return `${url}/embed`;
+    }
+    return url;
+  };
+
   return (
-    <div className="overflow-hidden">
+    <div className="overflow-x-hidden">
       <Header />
 
       <div className="max-w-6xl mx-auto px-4 py-6">
 
-        {/* Title */}
+        {/* TITLE */}
         <h1 className="text-2xl md:text-3xl font-bold text-green-600 mb-6">
           Instagram Reels
         </h1>
 
-        {/* Horizontal Scroll */}
-        <div className="flex gap-4 overflow-x-auto scrollbar-hide pb-2">
-
-          {reels.map((reel) => (
+        {/* 🔥 MOBILE: HORIZONTAL SCROLL */}
+        <div className="flex md:hidden gap-4 overflow-x-auto pb-3">
+          {reels.map((reel, i) => (
             <div
-              key={reel.id}
-              className="min-w-[250px] md:min-w-[300px] bg-white rounded-xl shadow p-3 flex-shrink-0"
+              key={i}
+              className="min-w-[260px] bg-white rounded-xl shadow p-3 shrink-0"
             >
-              <h2 className="font-semibold mb-2">{reel.title}</h2>
+              <h2 className="font-semibold mb-2">
+                Reel {i + 1}
+              </h2>
 
-              <div className="aspect-[9/16] w-full overflow-hidden rounded-lg">
+              <div className="aspect-[9/16] w-full rounded-lg overflow-hidden">
                 <iframe
-                  src={reel.url}
+                  src={getEmbedUrl(reel.url)}
                   className="w-full h-full"
-                  allow="autoplay; encrypted-media"
+                  allow="autoplay; clipboard-write; encrypted-media"
                 />
               </div>
             </div>
           ))}
-
         </div>
+
+        {/* 🔥 DESKTOP: GRID */}
+        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {reels.map((reel, i) => (
+            <div
+              key={i}
+              className="bg-white rounded-xl shadow p-3"
+            >
+              <h2 className="font-semibold mb-2">
+                Reel {i + 1}
+              </h2>
+
+              <div className="aspect-[9/16] w-full rounded-lg overflow-hidden">
+                <iframe
+                  src={getEmbedUrl(reel.url)}
+                  className="w-full h-full"
+                  allow="autoplay; clipboard-write; encrypted-media"
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
       </div>
     </div>
   );
