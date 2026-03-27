@@ -8,7 +8,7 @@ const API = axios.create({
 // 🔥 Attach token automatically
 API.interceptors.request.use((config) => {
   const token = Cookies.get("token");
-
+  console.log("TOKEN 👉", token);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
